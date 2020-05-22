@@ -1,4 +1,4 @@
-# FlaskAzureTableSession
+# Flask Session using Azure table storage (or cosmosDB table API)
 
 ![PyPI - License](https://img.shields.io/pypi/l/flask-session-azure)
 ![PyPI](https://img.shields.io/pypi/v/flask-session-azure)
