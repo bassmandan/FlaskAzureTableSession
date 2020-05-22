@@ -1,7 +1,8 @@
 # Flask Session using Azure table storage (or cosmosDB table API)
 
-![PyPI - License](https://img.shields.io/pypi/l/flask-session-azure)
-![PyPI](https://img.shields.io/pypi/v/flask-session-azure)
+
+[![PyPI - License](https://img.shields.io/pypi/l/flask-session-azure)](https://pypi.org/project/flask-session-azure/)
+[![PyPI](https://img.shields.io/pypi/v/flask-session-azure)](https://pypi.org/project/flask-session-azure/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flask-session-azure)
 
 This module can be used as a Flask Session handler for Azure table storage or Azure CosmosDB.
