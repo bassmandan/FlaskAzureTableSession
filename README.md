@@ -1,5 +1,9 @@
 # FlaskAzureTableSession
 
+![PyPI - License](https://img.shields.io/pypi/l/flask-session-azure)
+![PyPI](https://img.shields.io/pypi/v/flask-session-azure)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flask-session-azure)
+
 This module can be used as a Flask Session handler for Azure table storage or Azure CosmosDB.
 All stored data is encoded using AES encoding.
 
