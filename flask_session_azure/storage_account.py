@@ -1,6 +1,6 @@
 import base64
 
-from Crypto.Cipher import AES
+from Cryptodome.Cipher import AES
 from azure.common import AzureMissingResourceHttpError
 from azure.cosmosdb.table import TableService
 from flask.json.tag import TaggedJSONSerializer
@@ -36,6 +36,7 @@ class StorageAccount(object):
                 raise
             self.table_service.create_table(self.table_name)
             self.table_service.insert_or_merge_entity(self.table_name, entity)
+
 
     def read(self, key: str, encryption_key: str):
         """

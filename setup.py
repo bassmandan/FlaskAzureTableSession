@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='flask_session_azure',
-    version='0.3.4',
+    version='0.4.1',
     packages=['flask_session_azure'],
     url='https://github.com/claasd/FlaskAzureTableSession',
     license='MIT',
@@ -25,7 +25,7 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         "azure-cosmosdb-table~=1.0.6",
-        "pycryptodome~=3.9.7",
+        "pycryptodomex~=3.9.7",
         "flask"
     ]
 )

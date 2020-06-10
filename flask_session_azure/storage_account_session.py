@@ -86,9 +86,9 @@ class StorageAccountSessionInterface(SessionInterface):
         if session.modified:
             encryption_key = self.get_encryption_key_from_app_secret(app)
             self.storage.write(session.sid, dict(session), encryption_key)
-
-        httponly = self.get_cookie_httponly(app)
+        httponly = True
         secure = self.get_cookie_secure(app)
+        samesite = 'Strict'
         expires = self.get_expiration_time(app, session)
         response.set_cookie(app.session_cookie_name, session.sid, expires=expires, httponly=httponly, domain=domain,
-                            path=path, secure=secure)
+                            path=path, secure=secure, samesite=samesite)
