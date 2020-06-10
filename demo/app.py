@@ -6,8 +6,10 @@ from flask_session_azure import storage_account_interface
 app = flask.Flask(__name__)
 app.debug = True
 app.secret_key = b'some very good and long secret'
+
+# set this to true if you are behind on HTTPS
 app.config['SESSION_COOKIE_SECURE'] = False
-app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
+
 CONNECTION_STRING = os.environ.get("AzureWebJobsStorage")
 app.session_interface = storage_account_interface(CONNECTION_STRING)
 
