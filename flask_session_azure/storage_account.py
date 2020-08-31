@@ -2,7 +2,7 @@ import base64
 
 from Cryptodome.Cipher import AES
 from azure.common import AzureMissingResourceHttpError
-from azure.cosmosdb.table import TableService
+from azure.storage.table import TableService
 from flask.json.tag import TaggedJSONSerializer
 
 

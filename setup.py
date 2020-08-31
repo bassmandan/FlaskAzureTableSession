@@ -24,7 +24,7 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        "azure-cosmosdb-table~=1.0.6",
+        "azure.storage==0.36.0",
         "pycryptodomex~=3.9.7",
         "flask"
     ]
