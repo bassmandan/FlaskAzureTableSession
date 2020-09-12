@@ -5,7 +5,7 @@ from flask_session_azure import storage_account_interface
 
 app = flask.Flask(__name__)
 app.debug = True
-app.secret_key = b'some very good and long secret'
+app.secret_key = 'some very good and long secret with ümäuteàe%&'
 
 # set this to true if you are behind on HTTPS
 app.config['SESSION_COOKIE_SECURE'] = False

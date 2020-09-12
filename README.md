@@ -38,3 +38,13 @@ connection_string = os.environ.get("AzureWebjobsStorage")
 app.session_interface = storage_account_interface(connection_string)
 ```
 
+## Changelog
+
+### 0.4.3
+- Fixed issue with secret key length and secret key containing non-asci characters
+
+### 0.4.2
+- Fixed issue if "samesite" cookie value was not set (i.e. set to none). If it is not set, it is now set to Lax to work in an azure function (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite)
+
+### 0.4.1
+- First public release

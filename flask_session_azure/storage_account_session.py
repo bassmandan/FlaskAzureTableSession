@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+import flask
 from flask.sessions import SessionMixin, SessionInterface
 from werkzeug.datastructures import CallbackDict
 
@@ -12,7 +13,6 @@ class StorageAccountSession(CallbackDict, SessionMixin):
             self.modified = True
 
         CallbackDict.__init__(self, initial, on_update)
-
         self.sid = sid
         self.modified = False
 
@@ -35,7 +35,7 @@ class StorageAccountSessionInterface(SessionInterface):
         self.storage = StorageAccount(connection_str, table_name, partition_key, create_table_if_not_exists)
 
     @staticmethod
-    def get_encryption_key_from_app_secret(app):
+    def get_encryption_key_from_app_secret(app) -> bytes:
         """
         Checks if the app secret_key is set, and if it is long enough to use it as AES encryption key.
         Returns the key truncated to a length of multiples of 8, to use it as AES encryption key
@@ -44,17 +44,23 @@ class StorageAccountSessionInterface(SessionInterface):
             raise RuntimeError(
                 "The session is unavailable because no secret key was set. "
                 "Set the secret_key on the application to something unique and secret.")
-        if len(app.secret_key) < 16:
+        try:
+            # if secret_text is a string, make it bytes
+            secret_key = app.secret_key.encode("utf-8")
+        except AttributeError:
+            secret_key = app.secret_key
+
+        if len(secret_key) < 16:
             raise RuntimeError(
                 "The session is unavailable because the secret is too short. "
                 f"The secret must be 16 characters or longer, but is only {len(app.secret_key)} character(s).")
 
         # only use multiples of 8 from the secret_key tu use it as AES encryption_key
         characters = len(app.secret_key)
-        characters = characters - characters % 8
-        return app.secret_key[:characters]
+        characters = min(32, characters - characters % 8)
+        return secret_key[:characters]
 
-    def open_session(self, app, request):
+    def open_session(self, app: flask.Flask, request: flask.Request) -> StorageAccountSession:
         """
         Reads the session data from table storage, decrypts the data and returns the session object
         """
@@ -68,7 +74,7 @@ class StorageAccountSessionInterface(SessionInterface):
             return self.session_class(sid=sid, initial=data)
         return self.session_class(sid=sid)
 
-    def save_session(self, app, session, response):
+    def save_session(self, app: flask.Flask, session: StorageAccountSession, response: flask.Response) -> None:
         """
         Serializes the data to JSON, encrypts the data using AES
         and stores the encrypted data along with a verification tag to azure storage.
@@ -88,7 +94,9 @@ class StorageAccountSessionInterface(SessionInterface):
             self.storage.write(session.sid, dict(session), encryption_key)
         httponly = True
         secure = self.get_cookie_secure(app)
-        samesite = 'Strict'
+        samesite = self.get_cookie_samesite(app)
+        if samesite is None:
+            samesite = 'Lax'
         expires = self.get_expiration_time(app, session)
         response.set_cookie(app.session_cookie_name, session.sid, expires=expires, httponly=httponly, domain=domain,
                             path=path, secure=secure, samesite=samesite)
