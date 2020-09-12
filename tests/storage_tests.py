@@ -8,17 +8,12 @@ from tests.storage_mock import StorageMock
 
 class StorageTests(unittest.TestCase):
     connection_String = "DefaultEndpointsProtocol=https;AccountName=someAccount;AccountKey=someKey;EndpointSuffix=core.windows.net"
-    encryption_key = "abcdefghijkmnopq"
+    encryption_key = b"abcdefghijkmnopq"
 
     def _test_encryption_decryption(self, test_string, key):
         encrypted_data, tag, nonce = StorageAccount.encrypt(test_string, key)
         result = StorageAccount.decrypt(encrypted_data, tag, nonce, key)
         self.assertEqual(test_string, result)
-
-    def test_encryption_cylce_string_key(self):
-        key = "abcdefghijkmnopq"
-        data = "Hi, I'm commander Shepard, and this is my favorite shop on the citadel"
-        self._test_encryption_decryption(data, key)
 
     def test_encryption_cylce_byte_key(self):
         key = b"abcdefghijkmnopq"
