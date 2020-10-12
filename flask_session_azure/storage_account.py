@@ -3,9 +3,8 @@ from typing import Dict, List, Union, Tuple
 
 from Cryptodome.Cipher import AES
 from azure.common import AzureMissingResourceHttpError
-from azure.cosmosdb.table import TableService
 from flask.json.tag import TaggedJSONSerializer
-
+from azure.data.tables import TableClient
 
 class StorageAccount(object):
     json_serializer = TaggedJSONSerializer()
@@ -14,7 +13,7 @@ class StorageAccount(object):
         self.table_name = table_name
         self.partition_key = partition_key
         self.create_table_if_not_exists = create_table_if_not_exists
-        self.table_service = TableService(connection_string=connection_str)
+        self.table_service = TableClient.from_connection_string(conn_str=connection_str, table_name=self.table_name)
 
     def write(self, key: str, data: dict, encryption_key: bytes) -> None:
         """
@@ -31,12 +30,12 @@ class StorageAccount(object):
             "Nonce": nonce
         }
         try:
-            self.table_service.insert_or_merge_entity(self.table_name, entity)
+            self.table_service.upsert_entity(entity=entity)
         except AzureMissingResourceHttpError:
             if not self.create_table_if_not_exists:
                 raise
-            self.table_service.create_table(self.table_name)
-            self.table_service.insert_or_merge_entity(self.table_name, entity)
+            self.table_service.create_table()
+            self.table_service.upsert_entity(entity=entity)
 
     def read(self, key: str, app_key: bytes) -> Union[List[Dict], None]:
         """
@@ -44,8 +43,8 @@ class StorageAccount(object):
         Returns None if no data was found or decryption failed.
         """
         try:
-            data = self.table_service.get_entity(self.table_name, self.partition_key, key)
-            decoded = self.decrypt(data["Data"], data["Tag"], data["Nonce"], app_key)
+            data = self.table_service.get_entity(self.partition_key, key)
+            decoded = self.decrypt(data["Data"].value, data["Tag"].value, data["Nonce"].value, app_key)
             if decoded is not None:
                 return self.json_serializer.loads(decoded)
             return None
@@ -57,7 +56,7 @@ class StorageAccount(object):
         Removes an element from storage if it exists
         """
         try:
-            self.table_service.delete_entity(self.table_name, self.partition_key, key)
+            self.table_service.delete_entity(self.partition_key, key)
         except AzureMissingResourceHttpError:
             pass
 
