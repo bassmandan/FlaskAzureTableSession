@@ -1,4 +1,4 @@
-# Flask Session using Azure table storage (Compatible with Azure and Azure Stack Hub)
+# Flask Session using Azure table storage (Using Azure-Data-Tables Library)
 
 
 [![PyPI - License](https://img.shields.io/pypi/l/flask-session-azure)](https://pypi.org/project/flask-session-azure/)
@@ -39,6 +39,9 @@ app.session_interface = storage_account_interface(connection_string)
 ```
 
 ## Changelog
+
+### 0.4.4
+- Edited functions to use the Azure-Data-Tables library that is actively maintained by Microsoft
 
 ### 0.4.3
 - Fixed issue with secret key length and secret key containing non-asci characters
