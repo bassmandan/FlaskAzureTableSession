@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='flask_session_azure',
-    version='0.4.3',
+    version='0.4.4',
     packages=['flask_session_azure'],
     url='https://github.com/claasd/FlaskAzureTableSession',
     license='MIT',
