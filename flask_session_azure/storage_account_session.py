@@ -64,7 +64,7 @@ class StorageAccountSessionInterface(SessionInterface):
         """
         Reads the session data from table storage, decrypts the data and returns the session object
         """
-        sid = request.cookies.get(app.session_cookie_name)
+        sid = request.cookies.get(app.config["SESSION_COOKIE_NAME"])
         if not sid:
             sid = str(uuid4())
             return self.session_class(sid=sid)
@@ -86,7 +86,7 @@ class StorageAccountSessionInterface(SessionInterface):
         if not session:
             if session.modified:
                 self.storage.delete(session.sid)
-            response.delete_cookie(app.session_cookie_name, domain=domain, path=path)
+            response.delete_cookie(app.config["SESSION_COOKIE_NAME"], domain=domain, path=path)
             return
 
         if session.modified:
@@ -98,5 +98,5 @@ class StorageAccountSessionInterface(SessionInterface):
         if samesite is None:
             samesite = 'Lax'
         expires = self.get_expiration_time(app, session)
-        response.set_cookie(app.session_cookie_name, session.sid, expires=expires, httponly=httponly, domain=domain,
+        response.set_cookie(app.config["SESSION_COOKIE_NAME"], session.sid, expires=expires, httponly=httponly, domain=domain,
                             path=path, secure=secure, samesite=samesite)

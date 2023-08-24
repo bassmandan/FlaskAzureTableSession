@@ -40,6 +40,9 @@ app.session_interface = storage_account_interface(connection_string)
 
 ## Changelog
 
+### 0.4.5
+- Edited functions to use updated Azure-Core library instead of deprecated Azure-Common. Updated flask elements to use newer app.config format.
+
 ### 0.4.4
 - Edited functions to use the Azure-Data-Tables library that is actively maintained by Microsoft
 

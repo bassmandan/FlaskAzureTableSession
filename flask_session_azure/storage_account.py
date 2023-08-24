@@ -2,7 +2,7 @@ import base64
 from typing import Dict, List, Union, Tuple
 
 from Cryptodome.Cipher import AES
-from azure.common import AzureMissingResourceHttpError
+from azure.core.exceptions import ResourceNotFoundError
 from flask.json.tag import TaggedJSONSerializer
 from azure.data.tables import TableClient
 
@@ -31,7 +31,7 @@ class StorageAccount(object):
         }
         try:
             self.table_service.upsert_entity(entity=entity)
-        except AzureMissingResourceHttpError:
+        except ResourceNotFoundError:
             if not self.create_table_if_not_exists:
                 raise
             self.table_service.create_table()
@@ -44,11 +44,11 @@ class StorageAccount(object):
         """
         try:
             data = self.table_service.get_entity(self.partition_key, key)
-            decoded = self.decrypt(data["Data"].value, data["Tag"].value, data["Nonce"].value, app_key)
+            decoded = self.decrypt(data["Data"], data["Tag"], data["Nonce"], app_key)
             if decoded is not None:
                 return self.json_serializer.loads(decoded)
             return None
-        except AzureMissingResourceHttpError:
+        except ResourceNotFoundError:
             return None
 
     def delete(self, key: str) -> None:
@@ -57,7 +57,7 @@ class StorageAccount(object):
         """
         try:
             self.table_service.delete_entity(self.partition_key, key)
-        except AzureMissingResourceHttpError:
+        except ResourceNotFoundError:
             pass
 
     @staticmethod

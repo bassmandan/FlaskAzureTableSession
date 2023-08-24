@@ -5,11 +5,11 @@ with open("README.md", "r") as fh:
 
 setup(
     name='flask_session_azure',
-    version='0.4.4',
+    version='0.4.5',
     packages=['flask_session_azure'],
-    url='https://github.com/claasd/FlaskAzureTableSession',
+    url='https://github.com/bassmandan/FlaskAzureTableSession',
     license='MIT',
-    author='Claas Diederichs',
+    author='Claas Diederichs, Daniel Harding',
     author_email='',
     description='Flask Session using Azure Table Storage or CosmosDB table API',
     long_description=long_description,
@@ -19,6 +19,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
